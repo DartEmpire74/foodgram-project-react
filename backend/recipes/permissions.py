@@ -3,7 +3,8 @@ from rest_framework import permissions
 
 class IsAuthorOrReadOnly(permissions.BasePermission):
     """
-    Разрешение, которое позволяет только авторам рецептов редактировать или удалять их.
+    Разрешение, которое позволяет только авторам
+    рецептов редактировать или удалять их.
     Разрешает чтение всем пользователям.
     Разрешает создание только аутентифицированным пользователям.
     """
@@ -21,7 +22,8 @@ class IsAuthorOrReadOnly(permissions.BasePermission):
 
 class UserAccessPermission(permissions.BasePermission):
     """
-    Предоставляет доступ к /users/me/ только аутентифицированным пользователям.
+    Предоставляет доступ к /users/me/ только
+    аутентифицированным пользователям.
     Доступ к /users/{id}/ предоставляется всем пользователям.
     """
 

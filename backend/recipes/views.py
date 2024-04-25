@@ -8,7 +8,8 @@ from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.exceptions import NotFound
 from rest_framework.generics import get_object_or_404
-from rest_framework.permissions import IsAuthenticatedOrReadOnly, SAFE_METHODS, IsAuthenticated
+from rest_framework.permissions import (
+    IsAuthenticatedOrReadOnly, SAFE_METHODS, IsAuthenticated)
 from rest_framework.response import Response
 
 from recipes.filters import IngredientFilter, RecipeFilter
@@ -18,9 +19,9 @@ from recipes.models import (
 from recipes.pagination import StandardResultsSetPagination
 from recipes.permissions import IsAuthorOrReadOnly
 from recipes.serializers import (
-    FavoriteRecipeSerializer, IngredientSerializer, RecipeReadSerializer,
-    RecipeShortSerializer, RecipeWriteSerializer, SubscriptionSerializer, TagSerializer
-)
+    FavoriteRecipeSerializer, IngredientSerializer,
+    RecipeReadSerializer, RecipeShortSerializer,
+    RecipeWriteSerializer, SubscriptionSerializer, TagSerializer)
 from users.models import Subscription
 
 
@@ -64,19 +65,24 @@ class RecipeViewSet(viewsets.ModelViewSet):
             partial=True)
         write_serializer.is_valid(raise_exception=True)
         self.perform_update(write_serializer)
-        read_serializer = RecipeReadSerializer(instance, context={'request': request})
+        read_serializer = RecipeReadSerializer(
+            instance, context={'request': request})
         return Response(read_serializer.data, status=status.HTTP_200_OK)
 
     def perform_update(self, serializer):
         serializer.save()
 
     def create(self, request, *args, **kwargs):
-        write_serializer = RecipeWriteSerializer(data=request.data, context={'request': request})
+        write_serializer = RecipeWriteSerializer(
+            data=request.data, context={'request': request})
         write_serializer.is_valid(raise_exception=True)
         self.perform_create(write_serializer)
-        read_serializer = RecipeReadSerializer(write_serializer.instance, context={'request': request})
+        read_serializer = RecipeReadSerializer(
+            write_serializer.instance, context={'request': request})
         headers = self.get_success_headers(read_serializer.data)
-        return Response(read_serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+        return Response(
+            read_serializer.data, status=status.HTTP_201_CREATED,
+            headers=headers)
 
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
@@ -85,7 +91,9 @@ class RecipeViewSet(viewsets.ModelViewSet):
         try:
             instance = self.get_object()
         except NotFound:
-            return Response({"detail": "Cтраница не найдена."}, status=status.HTTP_404_NOT_FOUND)
+            return Response(
+                {"detail": "Cтраница не найдена."},
+                status=status.HTTP_404_NOT_FOUND)
         self.perform_destroy(instance)
         return Response(status=status.HTTP_204_NO_CONTENT)
 
@@ -97,7 +105,8 @@ class RecipeViewSet(viewsets.ModelViewSet):
             return RecipeReadSerializer
         return RecipeWriteSerializer
 
-    @action(detail=True, methods=['post', 'delete'], permission_classes=[IsAuthenticated])
+    @action(detail=True, methods=['post', 'delete'],
+            permission_classes=[IsAuthenticated])
     def favorite(self, request, pk=None):
         user = request.user
 
@@ -105,8 +114,11 @@ class RecipeViewSet(viewsets.ModelViewSet):
             try:
                 recipe = Recipe.objects.get(id=pk)
             except Recipe.DoesNotExist:
-                return Response({"detail": "Рецепт не найден."}, status=status.HTTP_400_BAD_REQUEST)
-            serializer = FavoriteRecipeSerializer(data={'recipe': recipe.id}, context={'request': request})
+                return Response(
+                    {"detail": "Рецепт не найден."},
+                    status=status.HTTP_400_BAD_REQUEST)
+            serializer = FavoriteRecipeSerializer(
+                data={'recipe': recipe.id}, context={'request': request})
             serializer.is_valid(raise_exception=True)
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -121,7 +133,9 @@ class RecipeViewSet(viewsets.ModelViewSet):
                     {"detail": "Рецепт не найден в избранном."},
                     status=status.HTTP_400_BAD_REQUEST)
 
-    @action(detail=True, methods=['post', 'delete'], url_path='shopping_cart', permission_classes=[IsAuthenticated])
+    @action(detail=True, methods=['post', 'delete'],
+            url_path='shopping_cart',
+            permission_classes=[IsAuthenticated])
     def manage_shopping_cart(self, request, pk=None):
         user = request.user
         if request.method == 'POST':
@@ -131,23 +145,34 @@ class RecipeViewSet(viewsets.ModelViewSet):
                 return Response(
                     {"detail": "Рецепт не найден."},
                     status=status.HTTP_400_BAD_REQUEST)
-            _, created = ShoppingList.objects.get_or_create(user=user, recipe=recipe)
+            _, created = ShoppingList.objects.get_or_create(
+                user=user, recipe=recipe)
             if created:
-                serializer = RecipeShortSerializer(recipe, context={'request': request})
+                serializer = RecipeShortSerializer(
+                    recipe, context={'request': request})
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
             else:
-                return Response({'error': 'Этот рецепт уже в списке покупок'}, status=status.HTTP_400_BAD_REQUEST)
+                return Response(
+                    {'error': 'Этот рецепт уже в списке покупок'},
+                    status=status.HTTP_400_BAD_REQUEST)
 
         elif request.method == 'DELETE':
             recipe = get_object_or_404(Recipe, id=pk)
             try:
-                shopping_item = ShoppingList.objects.get(user=user, recipe=recipe)
+                shopping_item = ShoppingList.objects.get(
+                    user=user, recipe=recipe)
                 shopping_item.delete()
-                return Response({'status': 'Рецепт удален из списка покупок'}, status=status.HTTP_204_NO_CONTENT)
+                return Response(
+                    {'status': 'Рецепт удален из списка покупок'},
+                    status=status.HTTP_204_NO_CONTENT)
             except ShoppingList.DoesNotExist:
-                return Response({'error': 'Рецепта не было в вашем списке покупок'}, status=status.HTTP_400_BAD_REQUEST)
+                return Response(
+                    {'error': 'Рецепта не было в вашем списке покупок'},
+                    status=status.HTTP_400_BAD_REQUEST)
 
-    @action(detail=False, methods=['get'], url_path='download_shopping_cart', permission_classes=[IsAuthenticated])
+    @action(detail=False, methods=['get'],
+            url_path='download_shopping_cart',
+            permission_classes=[IsAuthenticated])
     def download_shopping_cart(self, request):
         user = request.user
         shopping_items = IngredientRecipe.objects.filter(
@@ -162,13 +187,16 @@ class RecipeViewSet(viewsets.ModelViewSet):
         filename = f'{user.username}_shopping_list.csv'
         response = HttpResponse(
             content_type='text/csv',
-            headers={'Content-Disposition': f'attachment; filename={filename}'},
+            headers={
+                'Content-Disposition': f'attachment; filename={filename}'},
         )
         writer = csv.writer(response)
         writer.writerow(['Ingredient', 'Amount', 'Unit'])
 
         for item in shopping_items:
-            writer.writerow([item['ingredient__name'], item['total_amount'], item['ingredient__measurement_unit']])
+            writer.writerow(
+                [item['ingredient__name'], item['total_amount'],
+                 item['ingredient__measurement_unit']])
 
         return response
 
@@ -193,23 +221,37 @@ class SubscriptionViewSet(viewsets.GenericViewSet):
     @action(detail=True, methods=['post'], url_path='subscribe')
     def subscribe(self, request, id=None):
         if request.user.id == int(id):
-            return Response({'error': 'Вы не можете подписаться на себя.'}, status=status.HTTP_400_BAD_REQUEST)
+            return Response(
+                {'error': 'Вы не можете подписаться на себя.'},
+                status=status.HTTP_400_BAD_REQUEST)
         following = get_object_or_404(User, id=id)
-        subscription, created = Subscription.objects.get_or_create(user=request.user, following=following)
+        subscription, created = Subscription.objects.get_or_create(
+            user=request.user, following=following)
         if not created:
-            return Response({'error': 'Вы уже подписаны на этого пользователя.'}, status=status.HTTP_400_BAD_REQUEST)
-        serializer = SubscriptionSerializer(subscription, context={'request': request})
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
+            return Response(
+                {'error': 'Вы уже подписаны на этого пользователя.'},
+                status=status.HTTP_400_BAD_REQUEST)
+        serializer = SubscriptionSerializer(
+            subscription, context={'request': request})
+        return Response(
+            serializer.data, status=status.HTTP_201_CREATED)
 
     @action(detail=True, methods=['delete'], url_path='subscribe')
     def unsubscribe(self, request, id=None):
         try:
             following = User.objects.get(id=id)
         except User.DoesNotExist:
-            return Response({'error': 'Пользователь не найден.'}, status=status.HTTP_404_NOT_FOUND)
+            return Response(
+                {'error': 'Пользователь не найден.'},
+                status=status.HTTP_404_NOT_FOUND)
         try:
-            subscription = Subscription.objects.get(user=request.user, following=following)
+            subscription = Subscription.objects.get(
+                user=request.user, following=following)
             subscription.delete()
-            return Response({'message': 'Вы успешно отписались.'}, status=status.HTTP_204_NO_CONTENT)
+            return Response(
+                {'message': 'Вы успешно отписались.'},
+                status=status.HTTP_204_NO_CONTENT)
         except Subscription.DoesNotExist:
-            return Response({'error': 'Вы не подписаны на этого пользователя.'}, status=status.HTTP_400_BAD_REQUEST)
+            return Response(
+                {'error': 'Вы не подписаны на этого пользователя.'},
+                status=status.HTTP_400_BAD_REQUEST)
