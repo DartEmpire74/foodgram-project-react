@@ -80,7 +80,8 @@ class RecipeWriteSerializer(serializers.ModelSerializer):
     def validate(self, data):
         if 'ingredients' not in data:
             raise serializers.ValidationError(
-                {"ingredients": "Это поле обязательно для обновления рецепта."})
+                {"ingredients": "Это поле обязательно "
+                    "для обновления рецепта."})
         if 'tags' not in data:
             raise serializers.ValidationError(
                 {"tags": "Это поле обязательно для обновления рецепта."})

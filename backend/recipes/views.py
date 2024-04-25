@@ -125,7 +125,8 @@ class RecipeViewSet(viewsets.ModelViewSet):
         elif request.method == 'DELETE':
             recipe = get_object_or_404(Recipe, id=pk)
             try:
-                favorite_recipe = Favorite.objects.get(user=user, recipe=recipe)
+                favorite_recipe = Favorite.objects.get(
+                    user=user, recipe=recipe)
                 favorite_recipe.delete()
                 return Response(status=status.HTTP_204_NO_CONTENT)
             except Favorite.DoesNotExist:
@@ -150,7 +151,8 @@ class RecipeViewSet(viewsets.ModelViewSet):
             if created:
                 serializer = RecipeShortSerializer(
                     recipe, context={'request': request})
-                return Response(serializer.data, status=status.HTTP_201_CREATED)
+                return Response(serializer.data,
+                                status=status.HTTP_201_CREATED)
             else:
                 return Response(
                     {'error': 'Этот рецепт уже в списке покупок'},
