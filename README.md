@@ -1,5 +1,7 @@
 [![Actions Status](https://github.com/DartEmpire74/foodgram-project-react/workflows/main.yml/badge.svg)](https://github.com/DartEmpire74/foodgram-project-react/actions)
+
 # Foodgram - вкусные рецепты 
+## `https://foodgram.3utilities.com`
 Наш проект это сайт, на котором пользователи будут публиковать рецепты, 
 добавлять чужие рецепты в избранное и подписываться на публикации других авторов. 
 Пользователям сайта также будет доступен сервис «Список покупок». 
@@ -24,15 +26,14 @@
 если они еще не установлены на вашем сервере.
 
 ## Шаги развертывания
-1. Скопируйте файл `docker-compose.production.yml` в корневую директорию вашего проекта.
+1. Скопируйте файл `docker-compose.yml` в корневую директорию вашего проекта.
 2. Создайте файл .env и укажите в нем следующую информацию: 
-`ALLOWED_HOSTS, DEBUG, USE_SQLITE, POSTGRES_DB, POSTGRES_USER, POSTGRES_PASSWORD, DB_NAME, DB_HOST, DB_PORT`.
+`ALLOWED_HOSTS, DEBUG, POSTGRES_DB, POSTGRES_USER, POSTGRES_PASSWORD, DB_NAME, DB_HOST, DB_PORT`.
 
 ### Пример файла .env: 
 ```
 ALLOWED_HOSTS= 127.0.0.1,localhost
 DEBUG=true
-USE_SQLITE=false
 
 POSTGRES_DB=your_database
 POSTGRES_USER=your_username
@@ -46,7 +47,7 @@ DB_PORT = 5432
 3. В командной строке перейдите в директорию с вашим проектом.
 4. Запустите контейнеры с помощью команды:
 ```
-docker-compose -f docker-compose.production.yml up -d
+docker-compose docker compose up -d
 ```
 5. После успешного запуска всех контейнеров ваше приложение будет доступно по адресу 
 `http://ваш_домен`.
