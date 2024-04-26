@@ -1,3 +1,4 @@
+[![Actions Status](https://github.com/DartEmpire74/foodgram-project-react/workflows/main.yml/badge.svg)](https://github.com/DartEmpire74/foodgram-project-react/actions)
 # Foodgram - вкусные рецепты 
 Наш проект это сайт, на котором пользователи будут публиковать рецепты, 
 добавлять чужие рецепты в избранное и подписываться на публикации других авторов. 
