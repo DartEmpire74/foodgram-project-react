@@ -31,7 +31,7 @@ services:
       - backend
       - frontend
     volumes:
-      - static:/staticfiles
+      - static:/usr/share/nginx/html
       - media:/app/media
     ports:
       - "8090:80"
