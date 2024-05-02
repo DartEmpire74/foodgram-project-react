@@ -2,24 +2,21 @@ from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 
 from recipes.views import (
-    IngredientViewSet, RecipeViewSet,
-    SubscriptionViewSet, TagViewSet)
+    IngredientViewSet, RecipeViewSet, TagViewSet,
+    UserViewSet,)
 
 
 router = DefaultRouter()
 router.register('tags', TagViewSet)
 router.register('ingredients', IngredientViewSet)
 router.register('recipes', RecipeViewSet)
-router.register(r'users/subscriptions',
-                SubscriptionViewSet, basename='subscriptions')
+router.register(r'users', UserViewSet)
 
 
 urlpatterns = [
-    path('', include(router.urls)),
+    path('users/subscriptions/', UserViewSet.as_view({
+        'get': 'list_subscriptions'}), name='user-subscriptions'),
     path('', include('djoser.urls')),
+    path('', include(router.urls)),
     path('auth/', include('djoser.urls.authtoken')),
-    path('users/<int:id>/subscribe/', SubscriptionViewSet.as_view({
-        'post': 'subscribe',
-        'delete': 'unsubscribe'
-    }), name='subscribe'),
 ]

@@ -16,7 +16,7 @@ ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',')
 
 CSRF_COOKIE_SECURE = True
 
-CSRF_TRUSTED_ORIGINS = ['https://foodgram.3utilities.com']
+CSRF_TRUSTED_ORIGINS = os.getenv('CSRF_ORIGINS')
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -105,7 +105,7 @@ AUTH_PASSWORD_VALIDATORS = [
 DJOSER = {
     'PERMISSIONS': {
         'user_list': ['rest_framework.permissions.AllowAny'],
-        'user': ['recipes.permissions.UserAccessPermission'],
+        'user': ['users.permissions.UserAccessPermission'],
     },
     'SERIALIZERS': {
         'user': 'recipes.serializers.UserSerializer',

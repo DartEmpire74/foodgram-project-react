@@ -9,12 +9,14 @@ from recipes.models import (
 class TagRecipeInLine(admin.TabularInline):
     model = TagRecipe
     extra = 1
+    min_num = 1
     autocomplete_fields = ('tag',)
 
 
 class IngredientRecipeInLine(admin.TabularInline):
     model = IngredientRecipe
     extra = 1
+    min_num = 1
     autocomplete_fields = ('ingredient',)
 
 
@@ -40,7 +42,7 @@ class RecipeAdmin(admin.ModelAdmin):
     search_fields = ('name', 'text')
     list_filter = ('name', 'author', 'tags')
 
+    @admin.display(description='Количество в избранном')
     def favorites_count(self, obj):
         """Возвращает количество добавлений рецепта в избранное."""
         return Favorite.objects.filter(recipe=obj).count()
-    favorites_count.short_description = 'Количество в избранном'

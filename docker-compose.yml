@@ -33,5 +33,6 @@ services:
     volumes:
       - static:/usr/share/nginx/html
       - media:/app/media
+      - ./docs/:/usr/share/nginx/html/api/docs/
     ports:
       - "8090:80"

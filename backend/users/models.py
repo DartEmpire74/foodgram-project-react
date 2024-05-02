@@ -6,7 +6,6 @@ from users.validators import validate_username
 
 
 class User(AbstractUser):
-    """Модель пользователя."""
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ('username', 'first_name', 'last_name', 'password')
     username = models.CharField(
@@ -41,4 +40,11 @@ class Subscription(models.Model):
         User, on_delete=models.CASCADE, related_name='following')
 
     class Meta:
-        unique_together = ('user', 'following')
+        verbose_name = 'подписка'
+        verbose_name_plural = 'Подписки'
+        constraints = (
+            models.UniqueConstraint(
+                fields=('user', 'following'),
+                name='user_following_unique'
+            ),
+        )
