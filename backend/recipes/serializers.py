@@ -6,7 +6,7 @@ from recipes.constants import (
 from recipes.fields import Base64ImageField
 from recipes.models import (
     Favorite, Ingredient, IngredientRecipe,
-    Recipe, ShoppingList, Tag, TagRecipe)
+    Recipe, ShoppingList, Tag)
 from users.models import Subscription
 
 

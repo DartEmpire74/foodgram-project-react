@@ -19,9 +19,10 @@ from recipes.pagination import StandardResultsSetPagination
 from recipes.permissions import IsAuthorOrReadOnly
 from recipes.serializers import (
     FavoriteRecipeSerializer, IngredientSerializer,
-    RecipeReadSerializer, RecipeShortSerializer,
-    RecipeWriteSerializer, SubscriptionSerializer, TagSerializer,
-    UserSerializer, SubscribeSerializer, ShoppingListSerializer)
+    RecipeReadSerializer, RecipeWriteSerializer,
+    SubscriptionSerializer, TagSerializer,
+    UserSerializer, SubscribeSerializer,
+    ShoppingListSerializer)
 from users.models import Subscription
 
 
