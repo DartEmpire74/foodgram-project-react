@@ -303,7 +303,8 @@ class FavoriteRecipeSerializer(serializers.ModelSerializer):
 
             if Favorite.objects.filter(user=user, recipe=recipe).exists():
                 raise serializers.ValidationError(
-                    "Рецепт уже находится в избранном.", code=status.HTTP_400_BAD_REQUEST)
+                    "Рецепт уже находится в избранном.",
+                    code=status.HTTP_400_BAD_REQUEST)
 
             return data
         except Exception as e:
@@ -320,8 +321,10 @@ class ShoppingListSerializer(serializers.ModelSerializer):
     def validate_recipe(self, value):
         user = self.context['request'].user
         if ShoppingList.objects.filter(user=user, recipe=value).exists():
-            raise serializers.ValidationError('Этот рецепт уже в списке покупок')
+            raise serializers.ValidationError(
+                'Этот рецепт уже в списке покупок')
         return value
 
     def to_representation(self, instance):
-        return RecipeShortSerializer(instance.recipe, context=self.context).data
+        return RecipeShortSerializer(
+            instance.recipe, context=self.context).data
