@@ -63,7 +63,9 @@ class RecipeViewSet(viewsets.ModelViewSet):
             return RecipeReadSerializer
         return RecipeWriteSerializer
 
-    def _handle_recipe_action(self, request, pk, model, serializer_class, success_msg, error_msg):
+    def _handle_recipe_action(
+            self, request, pk, model, serializer_class,
+            success_msg, error_msg):
         user = request.user
         if request.method == 'POST':
             try:
@@ -83,9 +85,13 @@ class RecipeViewSet(viewsets.ModelViewSet):
             try:
                 item = model.objects.get(user=user, recipe=recipe)
                 item.delete()
-                return Response({'status': success_msg}, status=status.HTTP_204_NO_CONTENT)
+                return Response(
+                    {'status': success_msg},
+                    status=status.HTTP_204_NO_CONTENT)
             except model.DoesNotExist:
-                return Response({'error': error_msg}, status=status.HTTP_400_BAD_REQUEST)
+                return Response(
+                    {'error': error_msg},
+                    status=status.HTTP_400_BAD_REQUEST)
 
     @action(detail=True, methods=['post', 'delete'], url_path='favorite')
     def favorite(self, request, pk=None):
@@ -170,7 +176,7 @@ class UserViewSet(viewsets.ModelViewSet):
             serializer.is_valid(raise_exception=True)
             serializer.save(user=user)
             return Response(
-                    serializer.data, status=status.HTTP_201_CREATED)
+                serializer.data, status=status.HTTP_201_CREATED)
         else:
             following = get_object_or_404(User, id=pk)
             try:
