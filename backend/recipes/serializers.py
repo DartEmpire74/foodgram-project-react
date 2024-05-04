@@ -1,5 +1,5 @@
 from django.contrib.auth import get_user_model
-from rest_framework import serializers, status
+from rest_framework import serializers
 
 from recipes.constants import (
     MIN_INGREDIENT_AMOUNT, MIN_COOKING_TIME,
