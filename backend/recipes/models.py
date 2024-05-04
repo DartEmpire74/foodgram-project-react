@@ -1,9 +1,11 @@
 from colorfield.fields import ColorField
 from django.contrib.auth import get_user_model
+from django.core.validators import MinValueValidator
 from django.db import models
 
 from recipes.constants import (
-    CHAR_MAX_LENGTH, SLUG_MAX_LENGTH, RETURN_STR_LENGTH)
+    CHAR_MAX_LENGTH, SLUG_MAX_LENGTH, RETURN_STR_LENGTH,
+    MIN_COOKING_TIME, MIN_INGREDIENT_AMOUNT)
 from recipes.utils import random_color
 
 User = get_user_model()
@@ -73,7 +75,8 @@ class Recipe(models.Model):
         upload_to='recipes/images/',
         verbose_name='Картинка')
     cooking_time = models.PositiveIntegerField(
-        verbose_name='Время приготовления')
+        verbose_name='Время приготовления',
+        validators=[MinValueValidator(MIN_COOKING_TIME)])
     ingredients = models.ManyToManyField(
         Ingredient,
         through='IngredientRecipe',
@@ -99,7 +102,9 @@ class IngredientRecipe(models.Model):
     recipe = models.ForeignKey(
         Recipe, on_delete=models.CASCADE,
         related_name='ingredients_recipes')
-    amount = models.PositiveIntegerField()
+    amount = models.PositiveIntegerField(
+        validators=[MinValueValidator(MIN_INGREDIENT_AMOUNT)],
+    )
 
     class Meta:
         ordering = ('recipe',)
@@ -113,8 +118,7 @@ class IngredientRecipe(models.Model):
         )
 
     def __str__(self):
-        return (f''
-                f'{self.ingredient.name} в "{self.recipe.name}" — '
+        return (f'{self.ingredient.name} в "{self.recipe.name}" — '
                 f'{self.amount}')[:RETURN_STR_LENGTH]
 
 

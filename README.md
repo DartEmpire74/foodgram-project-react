@@ -1,4 +1,4 @@
-[![Actions Status](https://github.com/DartEmpire74/foodgram-project-react/workflows/main.yml/badge.svg)](https://github.com/DartEmpire74/foodgram-project-react/actions)
+![Foodgram Workflow](https://github.com/DartEmpire74/foodgram-project-react/actions/workflows/main.yml/badge.svg)
 
 # Foodgram - вкусные рецепты 
 ## `https://foodgram.3utilities.com`
@@ -50,81 +50,53 @@ DB_PORT = 5432
 docker-compose docker compose up -d
 ```
 5. Создайте суперпользователя для доступа в admin сайта.
-6. После успешного запуска всех контейнеров ваше приложение будет доступно по адресу 
-`http://ваш_домен`.
+6. В проекте реализованы миграции данных. В миграции зашито автоматическое наполение тегов и ингредиентов.
+При необходимости, вы можете отключить автонаполнение при помощи настроек в settings.py проекта:
+```
+ENABLE_INGREDIENT_MIGRATIONS = True
 
-## Миграции данных
+ENABLE_TAG_MIGRATIONS = True
+```
+### Добавление ингредиентов: 
+Пример файла с данными о ингредиентах находится в директории backend/ingredient_data. Вы также можете создать 
+свой собственный перечень ингредиентов и заменить старый файл своим. Перед выполнением миграции убедитесь, что файл CSV с данными о ингредиентах находится в указанном месте и 
+содержит нужные данные.
 
 ### Добавление тегов
 Чтобы добавить предустановленные теги в базу данных, выполните миграцию, 
-которая включает скрипт для добавления тегов.
+которая включает скрипт для добавления тегов. При необходимости вы можете изменить теги на собственные. 
+Для этого вам необходимо внести изменения в файл миграций. 
 
-Пример файла миграции для добавления тегов:
+Вот так выглядит код добавления тегов: 
 ```
-# migrations/0004_add_tags.py
-
-from django.db import migrations
-from recipes.utils import random_color
+... 
+# recipes/migrations/0003_add_tags.py
 
 def add_tags(apps, schema_editor):
+    if not settings.ENABLE_TAG_MIGRATIONS:
+        return
     Tag = apps.get_model('recipes', 'Tag')
     tags = [
+       # Название тега, slug, цвет тега (по умолчанию задается рандомно) 
         ('веганский', 'vegan', random_color()),
         ('безглютеновый', 'gluten_free', random_color()),
         ('низкокалорийный', 'low_calorie', random_color()),
-        # Добавьте дополнительные теги по желанию
     ]
     for name, slug, color in tags:
         Tag.objects.get_or_create(name=name, slug=slug, defaults={'color': color})
 
-class Migration(migrations.Migration):
-    dependencies = [
-        ('recipes', '0003_previous_migration'),  # замените на актуальное имя миграции
-    ]
-
-    operations = [
-        migrations.RunPython(add_tags),
-    ]
+...
 ```
-Запустите миграции с помощью команды:
+7. После этого примените миграции с помощью команды: 
 ```
-python manage.py migrate
+docker compose exec backend python manage.py migrate
 ```
-
-### Добавление ингредиентов
-Чтобы добавить ингредиенты в базу данных, вам следует выполнить миграцию, которая будет включать скрипт 
-для их добавления. Это обеспечит автоматическую инициализацию данных при первом развертывании проекта.
-
-Пример файла миграции для добавления ингредиентов:
+8. Соберите статику backend при помощи команд. 
 ```
-# migrations/0005_add_ingredients.py
-
-import csv
-from django.db import migrations
-
-def add_ingredients(apps, schema_editor):
-    Ingredient = apps.get_model('recipes', 'Ingredient')
-    with open('path_to_ingredients_csv_file.csv', 'r', encoding='utf-8') as file:
-        reader = csv.reader(file)
-        for row in reader:
-            name, measurement_unit = row
-            Ingredient.objects.get_or_create(name=name, defaults={'measurement_unit': measurement_unit})
-
-class Migration(migrations.Migration):
-    dependencies = [
-        ('recipes', '0004_add_tags'),  # Убедитесь, что это актуальная зависимость
-    ]
-
-    operations = [
-        migrations.RunPython(add_ingredients),
-    ]
+compose exec backend python manage.py collectstatic
+compose exec backend cp -r /app/collected_static/. /backend_static/static/
 ```
-
-Перед выполнением миграции убедитесь, что файл CSV с данными о ингредиентах находится в указанном месте и 
-содержит нужные данные.
-Запустите миграции с помощью команды:
-```
-python manage.py migrate
-```
+9. После успешного запуска всех контейнеров ваше приложение будет доступно по адресу 
+`http://ваш_домен`.
 
 [Документация к API](https://foodgram.3utilities.com/api/docs/)

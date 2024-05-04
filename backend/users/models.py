@@ -1,6 +1,7 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
+from recipes.constants import RETURN_STR_LENGTH
 from users.constants import EMAIL_MAX_LENGTH, USER_MAX_LENGTH
 from users.validators import validate_username
 
@@ -42,9 +43,15 @@ class Subscription(models.Model):
     class Meta:
         verbose_name = 'подписка'
         verbose_name_plural = 'Подписки'
+        ordering = ('user', 'following')
         constraints = (
             models.UniqueConstraint(
                 fields=('user', 'following'),
                 name='user_following_unique'
             ),
         )
+
+    def __str__(self):
+        return (
+            f'{self.user.username} -> '
+            f'{self.following.username}'[:RETURN_STR_LENGTH])

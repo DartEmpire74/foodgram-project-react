@@ -27,12 +27,11 @@ class UserAdmin(BaseUserAdmin):
         )
         return queryset
 
+    @admin.display(ordering='_recipe_count', description='Количество рецептов')
     def recipe_count(self, obj):
         return obj._recipe_count
-    recipe_count.admin_order_field = '_recipe_count'
-    recipe_count.short_description = 'Количество рецептов'
 
+    @admin.display(
+        ordering='_followers_count', description='Количество подписчиков')
     def followers_count(self, obj):
         return obj._followers_count
-    followers_count.admin_order_field = '_followers_count'
-    followers_count.short_description = 'Количество подписчиков'
