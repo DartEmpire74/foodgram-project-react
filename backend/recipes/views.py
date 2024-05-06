@@ -155,8 +155,7 @@ class UserViewSet(viewsets.ModelViewSet):
 
     @action(methods=['get'], detail=False, url_path='subscriptions')
     def list_subscriptions(self, request):
-        following_users = User.objects.filter(
-            followers__user=request.user)
+        following_users = User.objects.filter(following__user=request.user)
         page = self.paginate_queryset(following_users)
         if page is not None:
             serializer = SubscriptionSerializer(
