@@ -1,7 +1,6 @@
 ![Foodgram Workflow](https://github.com/DartEmpire74/foodgram-project-react/actions/workflows/main.yml/badge.svg)
 
-# Foodgram - вкусные рецепты 
-## `https://foodgram.3utilities.com`
+# [Foodgram - вкусные рецепты](https://foodgram.3utilities.com)
 Наш проект это сайт, на котором пользователи будут публиковать рецепты, 
 добавлять чужие рецепты в избранное и подписываться на публикации других авторов. 
 Пользователям сайта также будет доступен сервис «Список покупок». 

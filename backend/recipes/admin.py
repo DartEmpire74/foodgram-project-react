@@ -2,7 +2,7 @@ from django.contrib import admin
 
 from recipes.models import (
     Favorite, Ingredient, IngredientRecipe,
-    Recipe, Tag, TagRecipe,
+    Recipe, Tag, TagRecipe, ShoppingList
 )
 
 
@@ -46,3 +46,31 @@ class RecipeAdmin(admin.ModelAdmin):
     def favorites_count(self, obj):
         """Возвращает количество добавлений рецепта в избранное."""
         return Favorite.objects.filter(recipe=obj).count()
+
+
+@admin.register(Favorite)
+class FavoriteAdmin(admin.ModelAdmin):
+    list_display = ('user', 'recipe')
+    search_fields = ('user', 'recipe')
+    list_filter = ('user', 'recipe')
+
+
+@admin.register(TagRecipe)
+class TagRecipeAdmin(admin.ModelAdmin):
+    list_display = ('tag', 'recipe')
+    search_fields = ('tag', 'recipe')
+    list_filter = ('tag', 'recipe')
+
+
+@admin.register(IngredientRecipe)
+class IngredientRecipeAdmin(admin.ModelAdmin):
+    list_display = ('ingredient', 'recipe', 'amount')
+    search_fields = ('ingredient', 'recipe')
+    list_filter = ('ingredient', 'recipe')
+
+
+@admin.register(ShoppingList)
+class ShoppingListAdmin(admin.ModelAdmin):
+    list_display = ('user', 'recipe')
+    search_fields = ('user', 'recipe')
+    list_filter = ('user', 'recipe')

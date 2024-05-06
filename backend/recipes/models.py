@@ -97,12 +97,13 @@ class Recipe(models.Model):
 
 class IngredientRecipe(models.Model):
     ingredient = models.ForeignKey(
-        Ingredient, on_delete=models.CASCADE,
+        Ingredient, verbose_name='Ингредиент', on_delete=models.CASCADE,
         related_name='ingredients_recipes')
     recipe = models.ForeignKey(
-        Recipe, on_delete=models.CASCADE,
+        Recipe, verbose_name='Рецепт', on_delete=models.CASCADE,
         related_name='ingredients_recipes')
     amount = models.PositiveIntegerField(
+        verbose_name='Количество',
         validators=[MinValueValidator(MIN_INGREDIENT_AMOUNT)],
     )
 
@@ -124,9 +125,9 @@ class IngredientRecipe(models.Model):
 
 class TagRecipe(models.Model):
     tag = models.ForeignKey(
-        Tag, on_delete=models.CASCADE)
+        Tag, verbose_name='Тег', on_delete=models.CASCADE)
     recipe = models.ForeignKey(
-        Recipe, on_delete=models.CASCADE)
+        Recipe, verbose_name='Рецепт', on_delete=models.CASCADE)
 
     class Meta:
         ordering = ('recipe',)
@@ -146,10 +147,10 @@ class TagRecipe(models.Model):
 
 class ShoppingList(models.Model):
     user = models.ForeignKey(
-        User, on_delete=models.CASCADE,
+        User, verbose_name="Пользователь", on_delete=models.CASCADE,
         related_name='shopping_lists')
     recipe = models.ForeignKey(
-        Recipe, on_delete=models.CASCADE,
+        Recipe, verbose_name="Рецепт", on_delete=models.CASCADE,
         related_name='shopping_lists')
 
     class Meta:
@@ -170,10 +171,10 @@ class ShoppingList(models.Model):
 
 class Favorite(models.Model):
     user = models.ForeignKey(
-        User, on_delete=models.CASCADE,
+        User, verbose_name="Пользователь", on_delete=models.CASCADE,
         related_name='favorites')
     recipe = models.ForeignKey(
-        Recipe, on_delete=models.CASCADE,
+        Recipe, verbose_name="Рецепт", on_delete=models.CASCADE,
         related_name='favorites')
 
     class Meta:

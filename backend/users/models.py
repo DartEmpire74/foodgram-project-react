@@ -36,9 +36,11 @@ class User(AbstractUser):
 
 class Subscription(models.Model):
     user = models.ForeignKey(
-        User, on_delete=models.CASCADE, related_name='followers')
+        User, verbose_name='Пользователь',
+        on_delete=models.CASCADE, related_name='followers')
     following = models.ForeignKey(
-        User, on_delete=models.CASCADE, related_name='following')
+        User, verbose_name='Подписка',
+        on_delete=models.CASCADE, related_name='following')
 
     class Meta:
         verbose_name = 'подписка'

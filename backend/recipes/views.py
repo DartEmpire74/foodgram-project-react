@@ -181,7 +181,7 @@ class UserViewSet(viewsets.ModelViewSet):
             following = get_object_or_404(User, id=pk)
             try:
                 subscription = Subscription.objects.get(
-                    user=request.user, following_id=following.id)
+                    user=request.user, following=following.id)
             except Subscription.DoesNotExist:
                 return Response(
                     {"detail": "Подписка не найдена."},
