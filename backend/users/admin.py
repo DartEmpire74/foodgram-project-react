@@ -40,5 +40,5 @@ class UserAdmin(BaseUserAdmin):
 @admin.register(Subscription)
 class SubscriptionAdmin(admin.ModelAdmin):
     list_display = ('user', 'following')
-    search_fields = ('user',)
+    search_fields = ('user__username',)
     list_filter = ('user',)

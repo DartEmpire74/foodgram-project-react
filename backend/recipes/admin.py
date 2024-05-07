@@ -51,26 +51,26 @@ class RecipeAdmin(admin.ModelAdmin):
 @admin.register(Favorite)
 class FavoriteAdmin(admin.ModelAdmin):
     list_display = ('user', 'recipe')
-    search_fields = ('user', 'recipe')
+    search_fields = ('user__username', 'recipe__name')
     list_filter = ('user', 'recipe')
 
 
 @admin.register(TagRecipe)
 class TagRecipeAdmin(admin.ModelAdmin):
     list_display = ('tag', 'recipe')
-    search_fields = ('tag', 'recipe')
+    search_fields = ('tag__name', 'recipe__name')
     list_filter = ('tag', 'recipe')
 
 
 @admin.register(IngredientRecipe)
 class IngredientRecipeAdmin(admin.ModelAdmin):
     list_display = ('ingredient', 'recipe', 'amount')
-    search_fields = ('ingredient', 'recipe')
+    search_fields = ('ingredient__name', 'recipe__name')
     list_filter = ('ingredient', 'recipe')
 
 
 @admin.register(ShoppingList)
 class ShoppingListAdmin(admin.ModelAdmin):
     list_display = ('user', 'recipe')
-    search_fields = ('user', 'recipe')
+    search_fields = ('user__username', 'recipe__name')
     list_filter = ('user', 'recipe')
